@@ -4,7 +4,7 @@ if(hasParam('url'))
 $target = urldecode(rawurldecode($_REQUEST["url"]));
 $id = getYtId($target);
 $user = $_SERVER['HTTP_USER_AGENT'];
-$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+$ip = get_ip();
 
 $log = "log.txt";
 
@@ -29,6 +29,18 @@ function hasParam($param)
 function getYtId($url) {
 preg_match("/^(?:http(?:s)?:\/\/)?(?:www\.)?(?:m\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"'>]+)/", $url, $matches);
 return $matches[1];
+}
+
+function get_ip() {
+    foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR','HTTP_CF_CONNECTING_IP') as $key) {
+        if (array_key_exists($key, $_SERVER) === true) {
+            foreach (array_map('trim', explode(',', $_SERVER[$key])) as $ip) {
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                    return $ip;
+                }
+            }
+        }
+    }
 }
 
 function logStr($str)
