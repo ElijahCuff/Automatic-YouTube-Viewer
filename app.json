@@ -1,0 +1,4 @@
+{ "name": "AutoView", 
+"description": "PHP powered YouTube auto viewing solution.", 
+"repository": "https://github.com/GreyJustice/Gitployment/", 
+"keywords": ["Deployment example","Deploy to Heroku example project", "YouTube viewer"] }
